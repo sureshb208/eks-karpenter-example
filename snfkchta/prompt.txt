@@ -1,0 +1,72 @@
+I want to build a local AI-powered data chatbot application using Python and Streamlit.
+
+Context:
+- I am working on a data engineering project
+- My data is stored in Snowflake
+- I have tables with basic structure (no star schema, simple ingestion + transformed tables)
+- I will maintain metadata in .md files (one per table) containing:
+  - table description
+  - column descriptions
+  - basic metrics
+
+Goal:
+Build a working demo where:
+1. User enters a natural language question
+2. System reads metadata from .md files
+3. Converts question into Snowflake SQL
+4. Executes query in Snowflake
+5. Displays result in UI
+
+Requirements:
+- Use Python
+- Use Streamlit for UI
+- Use snowflake-connector-python for database connection
+- Use modular code structure
+- Keep it simple and clean for demo
+
+Features to implement:
+1. Streamlit UI:
+   - Input box for user question
+   - Button to submit
+   - Display generated SQL
+   - Display query result (table format)
+   - Optional: simple explanation text
+
+2. Metadata handling:
+   - Read .md files from a folder (metadata/)
+   - Pass metadata into prompt for SQL generation
+
+3. SQL generation:
+   - Create a function that takes:
+     (question + metadata)
+   - Returns SQL query
+   - Use rule-based approach OR placeholder LLM function (so I can replace later)
+
+4. Snowflake integration:
+   - Create connection using config file
+   - Execute generated SQL
+   - Return results as pandas dataframe
+
+5. Code structure:
+   - app.py (main streamlit app)
+   - config.py (snowflake connection)
+   - metadata/ folder
+   - utils.py (optional helper functions)
+
+6. Error handling:
+   - Handle invalid SQL
+   - Show user-friendly error message
+
+7. Keep everything runnable locally
+
+Important:
+- Do NOT overcomplicate
+- Do NOT use heavy frameworks
+- Keep it minimal and demo-ready
+- Write clean and readable code
+- Add comments explaining each part
+
+Output:
+- Provide full working code (all files)
+- Include instructions to run locally
+- Include example metadata file (sales_data.md)
