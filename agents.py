@@ -1,788 +1,458 @@
-AI Engineering Copilot Platform - Master Architecture (Single Page)
+AI Agent Platform Vision & Roadmap (Based on Data Engineering + Agentic AI)
 
-Vision
+Objective
 
-Build an internal AI Engineering Copilot powered entirely by Claude Code CLI, FastAPI, MCP servers, and specialized agents.
+Build an enterprise-grade multi-agent platform that combines Data Engineering principles (governance, lineage, observability, orchestration, reliability) with modern Agentic AI systems.
 
-The platform should support:
+The goal is not to build another chatbot.
 
-* Natural language chat
-* Multi-agent orchestration
-* Repository analysis
-* Jira planning
-* Security remediation
-* PR review
-* Incident investigation
-* Migration planning
-* Documentation generation
-* Knowledge retrieval
+The goal is to build an Agent Operating System where agents can:
 
-Everything should be accessible from a single web UI.
+* Plan
+* Execute
+* Verify
+* Learn
+* Remember
+* Collaborate
+* Be audited
 
-⸻
-
-High Level Architecture
-
-User
- │
- ▼
-Web UI
- │
- ▼
-FastAPI Backend
- │
- ▼
-Router Agent
- │
- ├── Chat Requests
- ├── Agent Execution
- ├── Pipeline Execution
- └── MCP Tool Access
- │
- ▼
-Claude Code CLI
- │
- ▼
-MCP Layer
- │
- ├── Jira MCP
- ├── Bitbucket MCP
- ├── Sourcegraph MCP
- ├── FARM MCP
- ├── FarmGenie MCP
- ├── Confluence MCP
- ├── Splunk MCP
- ├── Dynatrace MCP
- ├── AURA MCP
- ├── Idaho/IAN MCP
- └── V12/CRDB MCP
- │
- ▼
-Run Store + Knowledge Store
-(Postgres)
+while maintaining enterprise-level governance and observability.
 
 ⸻
 
-UI Design
+Core Industry Observations
 
-Single Page Application
+1. Agent Observability Is Becoming Mandatory
 
-┌──────────────────────────────────────┐
-│ AI Engineering Copilot               │
-├──────────────────────────────────────┤
-│                                      │
-│ Chat                                │
-│                                      │
-│ Agents                              │
-│                                      │
-│ Pipelines                           │
-│                                      │
-│ Active Runs                         │
-│                                      │
-│ Reports / Artifacts                 │
-│                                      │
-│ Cost Analytics                      │
-│                                      │
-│ MCP Explorer                        │
-│                                      │
-└──────────────────────────────────────┘
+A major challenge in production AI systems is:
 
-⸻
+“What exactly did the agent do?”
 
-Chat Copilot
+Future enterprise platforms will require:
 
-New endpoint:
+* Complete execution traces
+* Tool usage tracking
+* File change history
+* Command execution logs
+* Verification status
+* Approval history
+* Replay capabilities
 
-/ws/chat
+Every agent execution should generate an audit record.
 
-Examples:
+Example:
 
-Which repo owns this DAG?
-Show all Glue jobs writing to Snowflake.
-Find all Iceberg tables.
-Review PR 123.
-Show critical FARM findings.
-Create Jira story for Airflow upgrade.
-What caused incident INC-12345?
+{
+  "agent_name": "migration-agent",
+  "task": "upgrade airflow 2.3 to 3.x",
+  "tools_used": ["terraform", "kubectl", "git"],
+  "files_modified": [
+    "Dockerfile",
+    "requirements.txt",
+    "terraform.tf"
+  ],
+  "commands_executed": [],
+  "verification_status": "approved",
+  "timestamp": ""
+}
 
-The user should not need to know which agent or MCP is used.
+Think:
 
-⸻
-
-Router Agent
-
-Purpose:
-
-Determine which specialist agent should handle the request.
-
-Examples:
-
-User:
-Show all critical FARM findings
-Router:
-Security Agent
-User:
-Create Jira ticket
-Router:
-Jira Agent
-User:
-Why did EKS fail yesterday?
-Router:
-SRE Agent
-
-Router should be lightweight and fast.
+Airflow Logs
++
+Data Lineage
++
+Git History
+=
+Agent Observability
 
 ⸻
 
-Specialist Agents
+2. Never Trust a Single Agent
 
-Repository Agent
+Industry trend:
 
-Tools:
+Every production agent makes mistakes.
 
-* Sourcegraph
-* Bitbucket
-* Confluence
-
-Responsibilities:
-
-* Code search
-* Ownership discovery
-* Dependency analysis
-* Architecture discovery
-* Pattern search
-
-Questions:
-
-Which repo contains this DAG?
-Show all MWAA DAGs.
-Find Glue jobs using Iceberg.
-
-⸻
-
-Jira Agent
-
-Tools:
-
-* Jira
-* Confluence
-
-Responsibilities:
-
-* Create stories
-* Sprint analysis
-* Release planning
-* Ticket updates
-
-Questions:
-
-Create migration story.
-Show sprint progress.
-Move ticket to In Progress.
-
-⸻
-
-Security Agent
-
-Tools:
-
-* FARM
-* FarmGenie
-* Sourcegraph
-
-Responsibilities:
-
-* Vulnerability review
-* Remediation planning
-* Compliance analysis
-* Security reporting
-
-Questions:
-
-Show critical vulnerabilities.
-Generate fix plan.
-Create remediation PR.
-
-⸻
-
-SRE Agent
-
-Tools:
-
-* Dynatrace
-* Splunk
-* AURA
-
-Responsibilities:
-
-* Incident investigation
-* Log analysis
-* Performance review
-* Availability analysis
-
-Questions:
-
-Why did service fail?
-Show latency spikes.
-Investigate outage.
-
-⸻
-
-Data Platform Agent
-
-Tools:
-
-* Sourcegraph
-* Confluence
-* Jira
-
-Responsibilities:
-
-* MWAA
-* Airflow
-* Glue
-* Spark
-* Snowflake
-* Iceberg
-
-Questions:
-
-Review DAG.
-Analyze Iceberg migration.
-Find expensive Snowflake queries.
-
-⸻
-
-Migration Agent
-
-Responsibilities:
-
-* Airflow upgrades
-* Python upgrades
-* Terraform upgrades
-* Spark upgrades
-* Iceberg migrations
-
-Flow:
-
-Discover
-Analyze
-Plan
-Generate Code
-Validate
-Create PR
-
-⸻
-
-Documentation Agent
-
-Tools:
-
-* Confluence
-
-Responsibilities:
-
-* Architecture documents
-* Runbooks
-* RCA reports
-* Migration documents
-
-⸻
-
-Knowledge Agent
-
-Purpose:
-
-Reuse previous successful work.
-
-Search:
-
-* Previous audits
-* Previous PR reviews
-* Previous remediations
-* Previous incidents
-* Previous Jira stories
-
-This reduces repeated work and improves consistency.
-
-⸻
-
-Worker Agents
-
-Specialists should not directly edit code.
-
-Use workers.
-
-Planner Worker
-Code Worker
-Test Worker
-Validation Worker
-Documentation Worker
+Adopt Generator → Verifier patterns.
 
 Example:
 
 Migration Agent
- │
- ├── Planner
- ├── Code Generator
- ├── Test Generator
- ├── Validator
- └── Documentation Writer
-
-⸻
-
-Validation Layer
-
-Every major phase should be validated.
-
-Current:
-
-Planner
- ↓
-Coder
- ↓
-PR
-
-Recommended:
-
-Planner
- ↓
-Plan Validator
- ↓
-Coder
- ↓
-Code Validator
- ↓
-Security Validator
- ↓
-PR
-
-Benefits:
-
-* Fewer hallucinations
-* Better quality
-* Safer changes
-
-⸻
-
-Existing Pipelines
-
-Repository Audit
-
-Current:
-
-5 Auditors
- │
- ├── Glue
- ├── Snowflake
- ├── MWAA
- ├── EKS
- └── Cloud Transfer
- │
- ▼
-Summary Agent
-
-Enhancements:
-
-* Dynamic repo discovery
-* Security review
-* Architecture review
-* Cost review
-
-⸻
-
-Jira Plan
-
-Jira Reader
- ↓
-Planner
- ↓
-Branch Creator
- ↓
-Code Generator
- ↓
-PR Creator
-
-Add:
-
-Plan Validator
-Security Validator
-Test Generator
-
-⸻
-
-FARM Remediation
-
-Farm Analyzer
- ↓
-Jira Creator
- ↓
-Branch Creator
- ↓
-Code Fixer
- ↓
-PR Creator
-
-Add:
-
-Fix Validator
-Security Validator
-
-⸻
-
-PR Review
-
-Current:
-
-PR Reader
- ↓
-Reviewer
- ↓
-Jira Linker
-
-Replace with:
-
-PR Reader
- ↓
-Code Review Agent
- ↓
+        ↓
 Security Review Agent
- ↓
-Architecture Review Agent
- ↓
-Performance Review Agent
- ↓
-Summary Agent
-
-⸻
-
-New Pipelines
-
-Incident RCA Pipeline
-
-Incident
- ↓
-Splunk Agent
- ↓
-Dynatrace Agent
- ↓
-AURA Agent
- ↓
-Root Cause Agent
- ↓
-Confluence Report
-
-⸻
-
-Airflow Upgrade Pipeline
-
-Discover DAGs
- ↓
-Compatibility Check
- ↓
-Migration Plan
- ↓
-Code Generation
- ↓
-Tests
- ↓
-Validation
- ↓
-PR
-
-⸻
-
-Terraform Audit Pipeline
-
-Terraform Discovery
- ↓
-Security Review
- ↓
-Cost Review
- ↓
-Best Practice Review
- ↓
-Remediation Plan
-
-⸻
-
-Iceberg Migration Pipeline
-
-External Table Discovery
- ↓
-Schema Analysis
- ↓
-Migration Plan
- ↓
-Validation
- ↓
-PR
-
-⸻
-
-Deployment Readiness Pipeline
-
-PR
- ↓
-Monitoring Check
- ↓
-Alerting Check
- ↓
-Runbook Check
- ↓
-Rollback Check
- ↓
-Readiness Report
-
-⸻
-
-MCP Usage Strategy
-
-Sourcegraph MCP
-
-Use for:
-
-* Code search
-* Dependency discovery
-* Architecture discovery
-* Pattern analysis
-
-⸻
-
-Bitbucket MCP
-
-Use for:
-
-* Branch creation
-* PR creation
-* File updates
-* Commit history
-
-⸻
-
-Jira MCP
-
-Use for:
-
-* Story creation
-* Sprint reporting
-* Workflow transitions
-
-⸻
-
-Confluence MCP
-
-Use for:
-
-* Architecture docs
-* RCA reports
-* Runbooks
-
-⸻
-
-FARM MCP
-
-Use for:
-
-* Security findings
-* Vulnerability discovery
-
-⸻
-
-FarmGenie MCP
-
-Use for:
-
-* Fix guidance
-* Security knowledge base
-* Analytics reporting
-
-⸻
-
-Splunk MCP
-
-Use for:
-
-* Log analysis
-* Error investigation
-
-⸻
-
-Dynatrace MCP
-
-Use for:
-
-* Golden signals
-* Performance issues
-* Service health
-
-⸻
-
-AURA MCP
-
-Use for:
-
-* Incidents
-* SLI breaches
-* Change correlation
-* Root cause support
-
-⸻
-
-Critical Architecture Improvements
-
-Tool Isolation
-
-Current:
-
-All agents have all tools.
-
-Required:
-
-agent:
-  allowed_tools:
-    - sourcegraph
-    - jira
-
-Enforce in runtime.
-
-⸻
-
-Persistent State
-
-Replace in-memory tracking.
-
-Use:
-
-Postgres
-
-Tables:
-
-runs
-run_steps
-agent_outputs
-artifacts
-costs
-
-Benefits:
-
-* Resume runs
-* Audit history
-* Cost reporting
-
-⸻
-
-Retry Engine
-
-Support:
-
-retry:
-  attempts: 3
-  backoff: exponential
-
-Avoid pipeline failures caused by temporary MCP issues.
-
-⸻
-
-Human Approval Gates
-
-Examples:
-
-Plan Generated
- ↓
+        ↓
+Compliance Agent
+        ↓
+Cost Review Agent
+        ↓
 Human Approval
- ↓
-Code Generation
-Code Complete
- ↓
-Human Approval
- ↓
-Create PR
+
+No production changes should be accepted without verification.
 
 ⸻
 
-Dynamic Repository Discovery
+3. Agent Memory Is The Next Platform Layer
 
-Replace:
+Evolution:
 
-Hardcoded repositories
-
-With:
-
-Sourcegraph Discovery
-
-Automatically classify:
-
-Terraform
-Airflow
-Spark
-Snowflake
-Iceberg
-Glue
-
-⸻
-
-Knowledge Store
-
-Use Postgres.
+Search
+↓
+RAG
+↓
+Agents
+↓
+Persistent Memory
+↓
+Agent Organizations
 
 Store:
 
-* Audit results
-* RCA reports
-* PR reviews
-* Security remediations
-* Jira plans
+* Previous incidents
+* Previous migrations
+* Previous audits
+* Previous architectural decisions
+* Previous root cause analyses
+* Previous deployments
 
-Flow:
+Agents should learn from organizational history.
 
-Question
- ↓
-Search Knowledge
- ↓
-Search Code
- ↓
-Claude
- ↓
-Answer
+Possible storage:
+
+Snowflake
+Iceberg
+PostgreSQL
+Knowledge Graph
+Vector Database
 
 ⸻
 
-Cost Analytics
+4. Data Engineering Principles Apply Directly To Agents
+
+Traditional Data Engineering:
+
+Metadata
+Catalog
+Governance
+Lineage
+Quality
+Versioning
+Monitoring
+
+Future Agent Systems:
+
+Prompt Catalog
+Skill Catalog
+Agent Registry
+Agent Lineage
+Agent Governance
+Agent Monitoring
+Agent Versioning
+Agent Quality Checks
+
+Data Engineering becomes Agent Engineering.
+
+⸻
+
+5. Workflow Orchestration Is The Future
+
+Current world:
+
+Airflow
+    ↓
+Spark
+    ↓
+Snowflake
+
+Future world:
+
+Workflow Engine
+       ↓
+Planner Agent
+       ↓
+Specialist Agents
+       ↓
+Verifier Agents
+       ↓
+Approval Workflow
+       ↓
+Execution
+
+⸻
+
+Recommended Multi-Agent Topology
+
+User Request
+      ↓
+Planner Agent
+      ↓
+-----------------------------------
+| Terraform Agent                |
+| Snowflake Agent                |
+| Airflow Agent                  |
+| Security Agent                 |
+| Migration Agent                |
+| Documentation Agent            |
+-----------------------------------
+      ↓
+Verification Layer
+      ↓
+Approval Layer
+      ↓
+Execution
+      ↓
+Memory Layer
+      ↓
+Observability Layer
+
+⸻
+
+Shared Knowledge Layer
+
+Create a centralized knowledge system.
+
+Store:
+
+Architecture decisions
+Migration plans
+Runbooks
+Standards
+Lessons learned
+Incident reports
+Best practices
+
+Agents should read from this layer before executing work.
+
+This becomes the organization’s memory.
+
+⸻
+
+Governance Requirements
+
+Every agent must have:
+
+Permission Scope
+
+Example:
+
+Read:
+Entire repository
+Write:
+Only migration folder
+Execute:
+Approved commands only
+
+Approval Gates
+
+Require approval for:
+
+Production deployments
+Database changes
+File deletions
+IAM modifications
+Security changes
+
+Audit Trail
+
+Log:
+
+Who requested
+Which agent executed
+What changed
+Why it changed
+Verification results
+
+⸻
+
+Recommended Platform Architecture
+
+Frontend Portal
+      ↓
+FastAPI Backend
+      ↓
+Agent Orchestrator
+      ↓
+Task Queue
+      ↓
+--------------------------------------------------
+| Planner Agent                                  |
+| Terraform Agent                                |
+| Airflow Agent                                  |
+| Snowflake Agent                                |
+| AWS Agent                                      |
+| Security Agent                                 |
+| Documentation Agent                            |
+--------------------------------------------------
+      ↓
+Verifier Agents
+      ↓
+Human Approval
+      ↓
+Execution Layer
+      ↓
+Memory Layer
+      ↓
+Observability Layer
+
+⸻
+
+Memory Architecture
+
+Short-Term Memory
+
+Current session context.
+
+Examples:
+
+Current task
+Current workflow
+Current conversation
+
+⸻
+
+Episodic Memory
+
+Past executions.
+
+Examples:
+
+Previous migration
+Previous deployment
+Previous audit
+
+⸻
+
+Knowledge Memory
+
+Long-lived organizational knowledge.
+
+Examples:
+
+Standards
+Policies
+Best practices
+Architecture decisions
+
+⸻
+
+Observability Architecture
 
 Track:
 
-Input Tokens
-Output Tokens
-Execution Time
-Tool Calls
-Pipeline Cost
+Agent
+Task
+Execution time
+Files modified
+Commands executed
+Tokens consumed
+Verification results
+Approval status
 
-Dashboard:
+Potential tools:
 
-Most Expensive Agents
-Most Expensive Pipelines
-Average Runtime
-Success Rate
+Langfuse
+OpenTelemetry
+Custom Dashboard
+Snowflake
+PostgreSQL
 
 ⸻
 
-Recommended Execution Model
+What To Focus On Next 6 Months
 
-User
-↓
-Router Agent
-↓
-Specialist Agent
-↓
-Worker Agents
-↓
-Validators
-↓
-Human Approval
-↓
-PR / Ticket / Report
+Priority 1:
 
-This architecture will scale from simple chat queries to full repository audits, incident investigations, migrations, remediations, and engineering automation while remaining entirely powered by Claude Code CLI and your existing MCP ecosystem.
+Multi-Agent Orchestration
 
-This document can serve as the master blueprint for implementing the platform and feeding into Claude Code for iterative development.
+Learn:
+
+* Planner agents
+* Worker agents
+* Verifier agents
+* Routing patterns
+
+⸻
+
+Priority 2:
+
+Agent Observability
+
+Learn:
+
+* Tracing
+* Monitoring
+* Replay
+* Auditing
+
+⸻
+
+Priority 3:
+
+Persistent Agent Memory
+
+Learn:
+
+* Vector stores
+* Memory architectures
+* Knowledge graphs
+* Memory retrieval
+
+⸻
+
+Priority 4:
+
+MCP Ecosystem
+
+Learn:
+
+* MCP servers
+* Skills
+* Tool integration
+* Agent interoperability
+
+⸻
+
+Priority 5:
+
+Agent Governance
+
+Learn:
+
+* Access controls
+* Human-in-the-loop workflows
+* Compliance
+* Auditability
+
+⸻
+
+Key Design Principles
+
+1. Never trust a single agent.
+2. Always verify outputs.
+3. Store organizational memory.
+4. Keep complete audit trails.
+5. Separate planning from execution.
+6. Use specialized agents.
+7. Implement governance from day one.
+8. Build observability before scale.
+9. Treat prompts and skills as versioned assets.
+10. Apply Data Engineering principles to Agent Systems.
+
+⸻
+
+Long-Term Vision
+
+Build an enterprise Agent Operating System where:
+
+Agents Plan
+Agents Execute
+Agents Verify
+Agents Learn
+Agents Remember
+Agents Collaborate
+Humans Approve
+Everything Is Auditable
+
+The future is not just AI chatbots.
+
+The future is governed, observable, memory-enabled, multi-agent systems built using the same reliability principles that made modern data platforms successful.
